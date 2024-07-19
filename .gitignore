@@ -1,5 +1,7 @@
 # Ignore all
 /*
 
-# Except gitignore
+# Except gitignore, Source folder
 !/.gitignore
+!/Source
+
