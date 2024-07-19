@@ -4,7 +4,7 @@
 #include "Tools/DebugTool.h"
 #include "Engine/Engine.h"
 
-#define DEBUG_HELPER_LIFETIME 100.f
+constexpr float GDebug_Helper_Lifetime = 100.f;
 
 ADebugTool::ADebugTool()
 {
@@ -29,11 +29,11 @@ void ADebugTool::DrawDebugHelpers() const
 		const FVector UpVector = GetActorUpVector();
 		const FVector LineEnd = Location + ForwardVector * 100;
 		
-		DrawDebugSphere(World, Location, 50.f, 30, FColor::Magenta, false, DEBUG_HELPER_LIFETIME);
-		DrawDebugLine(World, Location, LineEnd, FColor:: Magenta, false, DEBUG_HELPER_LIFETIME, 0, 3);
-		DrawDebugPoint(World, LineEnd, 15, FColor:: Cyan, false, DEBUG_HELPER_LIFETIME);
-		DrawDebugCylinder(World, Location - ForwardVector * 10, Location + ForwardVector * 10, 55.f, 30, FColor::Yellow, false, DEBUG_HELPER_LIFETIME, 0, 1);
-		DrawDebugCylinder(World, Location - UpVector * 10, Location + UpVector * 10, 55.f, 30, FColor::Yellow, false, DEBUG_HELPER_LIFETIME, 0, 1);
+		DrawDebugSphere(World, Location, 50.f, 30, FColor::Magenta, false, GDebug_Helper_Lifetime);
+		DrawDebugLine(World, Location, LineEnd, FColor:: Magenta, false, GDebug_Helper_Lifetime, 0, 3);
+		DrawDebugPoint(World, LineEnd, 15, FColor:: Cyan, false, GDebug_Helper_Lifetime);
+		DrawDebugCylinder(World, Location - ForwardVector * 10, Location + ForwardVector * 10, 55.f, 30, FColor::Yellow, false, GDebug_Helper_Lifetime, 0, 1);
+		DrawDebugCylinder(World, Location - UpVector * 10, Location + UpVector * 10, 55.f, 30, FColor::Yellow, false, GDebug_Helper_Lifetime, 0, 1);
 	}
 }
 
