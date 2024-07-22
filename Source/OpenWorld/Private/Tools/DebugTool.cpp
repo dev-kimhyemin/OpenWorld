@@ -4,7 +4,7 @@
 #include "Tools/DebugTool.h"
 #include "Engine/Engine.h"
 
-constexpr float GDebug_Helper_Lifetime = 100.f;
+constexpr float GDebug_Helper_Lifetime = 200.f;
 
 ADebugTool::ADebugTool()
 {
@@ -16,6 +16,9 @@ void ADebugTool::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay called"));
+
+	SetActorLocation(FVector(0, 0, 200.f));
+	SetActorRotation(FRotator(30.f, 30.f, 0));
 
 	DrawDebugHelpers();
 }
@@ -40,7 +43,12 @@ void ADebugTool::DrawDebugHelpers() const
 void ADebugTool::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
+	ShowFrameRate(DeltaTime);
+}
+
+void ADebugTool::ShowFrameRate(const float DeltaTime) const
+{
 	if(GEngine)
 	{
 		const FString Name = GetName();
@@ -49,5 +57,7 @@ void ADebugTool::Tick(float DeltaTime)
 		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Red, DeltaTimeString);
 	}
 }
+
+
 
 

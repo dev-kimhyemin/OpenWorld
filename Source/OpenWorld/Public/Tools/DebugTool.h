@@ -20,5 +20,5 @@ protected:
 
 private:
 	void DrawDebugHelpers() const;
-
+	void ShowFrameRate(float DeltaTime) const;
 };
