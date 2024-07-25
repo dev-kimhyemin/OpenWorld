@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "BirdPawn.generated.h"
 
 // Forward declares
 class UCapsuleComponent;
 class USkeletalMeshComponent;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class OPENWORLD_API ABirdPawn : public APawn
@@ -18,12 +21,18 @@ class OPENWORLD_API ABirdPawn : public APawn
 public:
 	ABirdPawn();
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* InputMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	void Move(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere)
