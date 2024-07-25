@@ -13,24 +13,13 @@ void AContinuouslyMovingActor::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AContinuouslyMovingActor::DrawDebugHelper() const
-{
-	if(const UWorld* World = GetWorld())
-	{
-		const FVector Location = GetActorLocation();
-
-		DrawDebugSphere(World, Location, 20.f, 16, FColor::Red, false, 0.05f);
-	}
-}
-
 void AContinuouslyMovingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	RunningTime += DeltaTime;
 
 	AddActorWorldOffset(GetUpdatedOffsetCoordinate(DeltaTime));
-	DrawDebugHelper();
+	AddActorWorldRotation(GetUpdatedRotatorCoordinate(DeltaTime));
 }
 
 FVector AContinuouslyMovingActor::GetUpdatedOffsetCoordinate(const float DeltaTime) const
@@ -41,23 +30,50 @@ FVector AContinuouslyMovingActor::GetUpdatedOffsetCoordinate(const float DeltaTi
 
 	if(MoveX)
 	{
-		DeltaX = XValues.Amplitude
-			* GetOffsetWithMovementType(XValues.MovementType, DeltaTime, XValues.BounceSpeed);
+		DeltaX = GetUpdatedOffsetPoint(XMovementValues, DeltaTime);
 	}
 
 	if(MoveY)
 	{
-		DeltaY = YValues.Amplitude
-			* GetOffsetWithMovementType(YValues.MovementType, DeltaTime, YValues.BounceSpeed);
+		DeltaY = GetUpdatedOffsetPoint(YMovementValues, DeltaTime);
 	}
 
 	if(MoveZ)
 	{
-		DeltaZ = ZValues.Amplitude
-			* GetOffsetWithMovementType(ZValues.MovementType, DeltaTime, ZValues.BounceSpeed);
+		DeltaZ = GetUpdatedOffsetPoint(ZMovementValues, DeltaTime);
 	}
 
 	return FVector(DeltaX, DeltaY, DeltaZ);
+}
+
+FRotator AContinuouslyMovingActor::GetUpdatedRotatorCoordinate(const float DeltaTime) const
+{
+	float DeltaX = 0.f;
+	float DeltaY = 0.f;
+	float DeltaZ = 0.f;
+
+	if(RotateX)
+	{
+		DeltaX = GetUpdatedOffsetPoint(XRotationValues, DeltaTime);
+	}
+
+	if(RotateY)
+	{
+		DeltaY = GetUpdatedOffsetPoint(YRotationValues, DeltaTime);
+	}
+
+	if(RotateZ)
+	{
+		DeltaZ = GetUpdatedOffsetPoint(ZRotationValues, DeltaTime);
+	}
+	
+	return FRotator(DeltaX, DeltaY, DeltaZ);
+}
+
+float AContinuouslyMovingActor::GetUpdatedOffsetPoint(const FMovementValues MovementValues, const float DeltaTime) const
+{
+	return MovementValues.Amplitude
+		* GetOffsetWithMovementType(MovementValues.MovementType, DeltaTime, MovementValues.BounceSpeed);
 }
 
 float AContinuouslyMovingActor::GetOffsetWithMovementType(EMovementType MovementType, float DeltaTime, float BounceSpeed) const

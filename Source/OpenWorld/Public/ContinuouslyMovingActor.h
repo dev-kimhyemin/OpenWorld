@@ -9,9 +9,9 @@
 UENUM(BlueprintType)
 enum class EMovementType : uint8
 {
-	Linear		UMETA(DisplayName="Linear"),
-	SinPingPong	UMETA(DisplayName="SinPingPong"),
-	CosPingPong	UMETA(DisplayName="CosPingPong")
+	Linear			UMETA(DisplayName="Linear"),
+	SinPingPong		UMETA(DisplayName="SinPingPong"),
+	CosPingPong		UMETA(DisplayName="CosPingPong")
 };
 
 USTRUCT(Blueprintable)
@@ -28,8 +28,9 @@ struct FMovementValues
 	UPROPERTY(EditAnywhere, meta=(ClampMin=0.f, EditCondition="MovementType != EMovementType::Linear", EditConditionHides))
 	float BounceSpeed;
 
-	FMovementValues(): MovementType()
+	FMovementValues()
 	{
+		MovementType = EMovementType::Linear;
 		Amplitude = 1.f;
 		BounceSpeed = 1.f;
 	}
@@ -50,8 +51,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	FVector GetUpdatedOffsetCoordinate(const float DeltaTime) const;
 
+	FRotator GetUpdatedRotatorCoordinate(const float DeltaTime) const;
+	float GetUpdatedOffsetPoint(const FMovementValues MovementValues, const float DeltaTime) const;
+
 private:
-	void DrawDebugHelper() const;
 	float GetOffsetWithMovementType(EMovementType MovementType, float DeltaTime, float BounceSpeed) const;
 
 	UPROPERTY(VisibleInstanceOnly)
@@ -60,15 +63,31 @@ private:
 	UPROPERTY(EditAnywhere, AdvancedDisplay)
 	bool MoveX = false;
 	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="MoveX", EditConditionHides))
-	FMovementValues XValues;
+	FMovementValues XMovementValues;
 
 	UPROPERTY(EditAnywhere, AdvancedDisplay)
 	bool MoveY = false;
 	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="MoveY", EditConditionHides))
-	FMovementValues YValues;
+	FMovementValues YMovementValues;
 	
 	UPROPERTY(EditAnywhere, AdvancedDisplay)
 	bool MoveZ = false;
 	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="MoveZ", EditConditionHides))
-	FMovementValues ZValues;
+	FMovementValues ZMovementValues;
+
+	UPROPERTY(EditAnywhere, AdvancedDisplay)
+	bool RotateX = false;
+	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="RotateX", EditConditionHides))
+	FMovementValues XRotationValues;
+
+	UPROPERTY(EditAnywhere, AdvancedDisplay)
+	bool RotateY = false;
+	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="RotateY", EditConditionHides))
+	FMovementValues YRotationValues;
+
+	UPROPERTY(EditAnywhere, AdvancedDisplay)
+	bool RotateZ = false;
+	UPROPERTY(EditAnywhere, AdvancedDisplay, meta=(EditCondition="RotateZ", EditConditionHides))
+	FMovementValues ZRotationValues;
 };
+
