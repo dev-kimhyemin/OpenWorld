@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Pawns/BirdPawn.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Pawns/BirdPawn.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
-#include "Tools/DebugTool.h"
 
 constexpr float Tolerance = KINDA_SMALL_NUMBER;
 
@@ -44,7 +43,6 @@ void ABirdPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ABirdPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -52,15 +50,37 @@ void ABirdPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABirdPawn::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABirdPawn::Look);
+		EnhancedInputComponent->BindAction(RiseAction, ETriggerEvent::Triggered, this, &ABirdPawn::Rise);
 	}
 }
 
 void ABirdPawn::Move(const FInputActionValue& Value)
 {
-	if(const float DirectionValue = Value.Get<float>(); Controller && FMath::Abs(DirectionValue) > KINDA_SMALL_NUMBER)
+	if(const float DirectionValue = Value.Get<float>();
+		GetController() && FMath::Abs(DirectionValue) > KINDA_SMALL_NUMBER)
 	{
 		const FVector Forward = GetActorForwardVector();
 		AddMovementInput(Forward, DirectionValue);
+	}
+}
+
+void ABirdPawn::Look(const FInputActionValue& Value)
+{
+	if(const FVector2d AxisValue = Value.Get<FVector2d>(); GetController())
+	{
+		AddControllerYawInput(AxisValue.X);
+		AddControllerPitchInput(-AxisValue.Y);
+	}
+}
+
+void ABirdPawn::Rise(const FInputActionValue& Value)
+{
+	if(const float DirectionValue = Value.Get<float>();
+		GetController() && FMath::Abs(DirectionValue) > KINDA_SMALL_NUMBER)
+	{
+		const FVector Up = GetActorUpVector();
+		AddMovementInput(Up, DirectionValue);
 	}
 }
 

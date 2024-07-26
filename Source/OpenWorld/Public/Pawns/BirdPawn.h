@@ -32,7 +32,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* RiseAction;
+
 	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void Rise(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere)
