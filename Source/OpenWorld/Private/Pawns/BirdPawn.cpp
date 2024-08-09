@@ -2,10 +2,10 @@
 
 
 #include "Pawns/BirdPawn.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/InputComponent.h"
 
 constexpr float Tolerance = KINDA_SMALL_NUMBER;

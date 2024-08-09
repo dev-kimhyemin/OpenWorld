@@ -1,16 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ContinuouslyMovingActor.h"
+#include "Actor/ContinuouslyMovingActor.h"
+
 
 AContinuouslyMovingActor::AContinuouslyMovingActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AContinuouslyMovingActor::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void AContinuouslyMovingActor::Tick(float DeltaTime)

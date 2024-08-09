@@ -41,11 +41,13 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Rise(const FInputActionValue& Value);
-
+	
 private:
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* CapsuleComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	float MaxSpeed;
 };

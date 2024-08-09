@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -28,6 +27,8 @@ struct FMovementValues
 	UPROPERTY(EditAnywhere, meta=(ClampMin=0.f, EditCondition="MovementType != EMovementType::Linear", EditConditionHides))
 	float BounceSpeed;
 
+	FString ToString() const;
+
 	FMovementValues()
 	{
 		MovementType = EMovementType::Linear;
@@ -35,6 +36,11 @@ struct FMovementValues
 		BounceSpeed = 1.f;
 	}
 };
+
+inline FString FMovementValues::ToString() const
+{
+	return FString::Printf(TEXT("Amplitude=%f BounceSpeed=%f"), Amplitude, BounceSpeed);
+}
 
 UCLASS()
 class OPENWORLD_API AContinuouslyMovingActor : public AActor
@@ -46,8 +52,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	virtual void BeginPlay() override;
-	
 	UFUNCTION(BlueprintCallable)
 	FVector GetUpdatedOffsetCoordinate(const float DeltaTime) const;
 
