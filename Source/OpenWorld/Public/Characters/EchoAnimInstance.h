@@ -3,9 +3,9 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Characters/EchoAttributes.h"
 #include "EchoAnimInstance.generated.h"
 
-enum class ECharacterEquipmentState : uint8;
 class AEcho;
 class UCharacterMovementComponent;
 
@@ -30,6 +30,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = Movement)
 	bool IsFalling;
 
-private:
+	UPROPERTY(BlueprintReadOnly, Category = "Movement | Character State")
 	ECharacterEquipmentState CharacterEquipmentState;
 };

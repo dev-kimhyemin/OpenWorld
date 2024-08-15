@@ -1,3 +1,4 @@
+#pragma once
 
 #include "Characters/EchoAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"

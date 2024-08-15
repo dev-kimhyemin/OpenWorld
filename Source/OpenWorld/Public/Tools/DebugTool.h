@@ -67,6 +67,11 @@ struct THasToString<T, std::void_t<decltype(std::declval<T>().ToString())>> : st
 		UE_LOG(LogTemp, Log, TEXT("%s: %ls"), *Identifier, Value);
 	}
 
+	inline void LogValue(const FString& Value, const FString& Identifier = "")
+	{
+		UE_LOG(LogTemp, Log, TEXT("%s: %s"), *Identifier, *Value);
+	}
+
 	// Case: Cannot use LogValue, Log Warning
 	template<typename T>
 	std::enable_if_t<!THasToString<T>::value && !std::is_arithmetic_v<T>

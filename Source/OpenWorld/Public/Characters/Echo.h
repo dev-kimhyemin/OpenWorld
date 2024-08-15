@@ -3,20 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EchoAttributes.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Echo.generated.h"
 
+class UEchoAnimInstance;
 class UInputMappingContext;
 class UInputAction;
 class ACollectableItem;
+class UAnimMontage;
+class AWeapon;
 
-UENUM(BlueprintType)
-enum class ECharacterEquipmentState : uint8
-{
-	Unequipped	UMETA(DisplayName = "Unequipped"),
-	Axe			UMETA(DisplayName = "Axe"),
-};
 
 UCLASS()
 class OPENWORLD_API AEcho : public ACharacter
@@ -25,12 +23,23 @@ class OPENWORLD_API AEcho : public ACharacter
 
 public:
 	AEcho();
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
 
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void OnAttackEnd();
+	
+	UFUNCTION(BlueprintCallable)
+	void OnArm() const;
+
+	UFUNCTION(BlueprintCallable)
+	void OnDisarm() const;
+
+	UFUNCTION(BlueprintCallable)
+	void OnArmingFinished();
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* InputMappingContext;
@@ -56,6 +65,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* EquipAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = Montage)
+	UAnimMontage* AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Montage)
+	UAnimMontage* ArmingMontage;
+
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -64,11 +79,24 @@ private:
 	void Dodge(const FInputActionValue& Value);
 	void Equip();
 
+	void PlayAttackMontage();
+	void PlayArmingMontage(const FName SectionName) const;
+	
+	bool CanAttack() const;
+
 	UPROPERTY(VisibleInstanceOnly)
 	ACollectableItem* OverlappingItem;
 
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AWeapon* EquippedWeapon;
+
 	ECharacterEquipmentState EquipmentState = ECharacterEquipmentState::Unequipped;
+	ECharacterActionState ActionState = ECharacterActionState::Unoccupied;
+	
 	const FName RightHandSocketName = FName("RightHandSocket");
+	const FName BackSocketName = FName("BackSocket");
+
+	int32 AttackMontageIndex = 0;
 
 public:
 	FORCEINLINE void SetOverlappingItem(ACollectableItem* Item) { OverlappingItem = Item; }

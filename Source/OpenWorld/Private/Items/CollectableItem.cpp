@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Characters/Echo.h"
 
+
 ACollectableItem::ACollectableItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -23,8 +24,24 @@ void ACollectableItem::BeginPlay()
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ACollectableItem::OnSphereEndOverlap);
 }
 
+void ACollectableItem::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(!bItemCollected)
+	{
+		AddActorWorldOffset(FVector(0.f, 0.f, GetTransformedSin()));
+	}
+}
+
+float ACollectableItem::GetTransformedSin() const
+{
+	return FMath::Sin(GetGameTimeSinceCreation() * 3.0f) * 0.3f;
+}
+
+
 void ACollectableItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(AEcho* Echo = Cast<AEcho>(OtherActor))
 	{
@@ -40,5 +57,3 @@ void ACollectableItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedCompone
 		Echo->SetOverlappingItem(nullptr);
 	}
 }
-
-

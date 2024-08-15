@@ -7,6 +7,7 @@
 
 class USphereComponent;
 
+
 UCLASS()
 class OPENWORLD_API ACollectableItem : public AActor
 {
@@ -20,6 +21,9 @@ protected:
 	UStaticMeshComponent* StaticMeshComponent;
 	
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+
+	float GetTransformedSin() const;
 	
 	UFUNCTION()
 	virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -27,7 +31,9 @@ protected:
 	UFUNCTION()
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-private:
+	UPROPERTY(BlueprintReadOnly)
+	bool bItemCollected = false;
+	
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* SphereComponent;
 };
