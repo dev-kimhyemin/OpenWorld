@@ -9,6 +9,7 @@
 class AEcho;
 class UCharacterMovementComponent;
 
+
 UCLASS()
 class OPENWORLD_API UEchoAnimInstance : public UAnimInstance
 {

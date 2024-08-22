@@ -112,6 +112,11 @@ bool AEcho::CanAttack() const
 void AEcho::OnAttackEnd()
 {
 	ActionState = ECharacterActionState::Unoccupied;
+	
+	if(UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->Montage_Stop(0.3f, AttackMontage);
+	}
 }
 
 void AEcho::Dodge(const FInputActionValue& Value)
@@ -176,6 +181,14 @@ void AEcho::OnDisarm() const
 void AEcho::OnArmingFinished()
 {
 	ActionState = ECharacterActionState::Unoccupied;
+}
+
+void AEcho::SetWeaponCollisionEnabled(const ECollisionEnabled::Type CollisionEnabled) const
+{
+	if(EquippedWeapon)
+	{
+		EquippedWeapon->SetBoxCollisionEnabled(CollisionEnabled);
+	}
 }
 
 

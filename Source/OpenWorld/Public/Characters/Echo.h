@@ -41,6 +41,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void OnArmingFinished();
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollisionEnabled(const ECollisionEnabled::Type CollisionEnabled) const;
+
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* InputMappingContext;
 
@@ -92,11 +95,11 @@ private:
 
 	ECharacterEquipmentState EquipmentState = ECharacterEquipmentState::Unequipped;
 	ECharacterActionState ActionState = ECharacterActionState::Unoccupied;
+
+	int32 AttackMontageIndex = 0;
 	
 	const FName RightHandSocketName = FName("RightHandSocket");
 	const FName BackSocketName = FName("BackSocket");
-
-	int32 AttackMontageIndex = 0;
 
 public:
 	FORCEINLINE void SetOverlappingItem(ACollectableItem* Item) { OverlappingItem = Item; }

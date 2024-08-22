@@ -6,6 +6,7 @@
 #include "CollectableItem.generated.h"
 
 class USphereComponent;
+class UBoxComponent;
 
 
 UCLASS()
