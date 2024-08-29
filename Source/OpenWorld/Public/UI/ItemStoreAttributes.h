@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 
 class UItemSlot;
+
 DECLARE_DELEGATE_OneParam(SlotClickedDelegate, UItemSlot*)
 
 

@@ -10,22 +10,18 @@ void UItemStore::StoreInitialSetting(UPanelWidget* PanelWidget)
 {
 	InitializeItemDataAssets();
 	UpdateBankBalanceTextBlock();
+
+	SlotClickedDelegate Delegate;
+	Delegate.BindUObject(this, &UItemStore::OnSlotClicked);
 	
 	for(UWidget* Widget : PanelWidget->GetAllChildren())
 	{
 		if(UItemSlot* ItemSlot = Cast<UItemSlot>(Widget))
 		{
 			ItemSlots.AddUnique(ItemSlot);
+			ItemSlot->InitializeSlotClickedDelegate(Delegate);
+			SetSlot(ItemSlot);
 		}
-	}
-	
-	for(UItemSlot* ItemSlot : ItemSlots)
-	{
-		SlotClickedDelegate Delegate;
-		Delegate.BindUObject(this, &UItemStore::OnSlotClicked);
-		ItemSlot->InitializeSlotClickedDelegate(Delegate);
-		
-		SetSlot(ItemSlot);
 	}
 }
 
@@ -39,6 +35,32 @@ void UItemStore::SetSlot(UItemSlot* ItemSlot)
 	{
 		ItemSlot->SetSlotNonInteractable();
 	}
+}
+
+UStoreItemDataAsset* UItemStore::GetAvailableItemData()
+{
+	if(SearchItemCount == StoreItemDataAssets.Num())
+	{
+		return nullptr;
+	}
+	
+	const int InitialIndex = FMath::RandRange(0, StoreItemDataAssets.Num() - 1);
+	int CurrentIndex = InitialIndex;
+
+	do
+	{
+		if(!StoreItemDataAssets[CurrentIndex]->bIsShown)
+		{
+			StoreItemDataAssets[CurrentIndex]->bIsShown = true;
+			++SearchItemCount;
+			return StoreItemDataAssets[CurrentIndex];
+		}
+
+		CurrentIndex = (CurrentIndex + 1) % StoreItemDataAssets.Num();
+	}
+	while (CurrentIndex != InitialIndex);
+
+	return nullptr;
 }
 
 void UItemStore::OnSlotClicked(UItemSlot* ClickedSlot)
@@ -68,30 +90,6 @@ void UItemStore::UpdateBankBalanceTextBlock() const
 	}
 }
 
-UStoreItemDataAsset* UItemStore::GetAvailableItemData()
-{
-	if(SearchItemCount == StoreItemDataAssets.Num())
-	{
-		return nullptr;
-	}
-	
-	const int InitialIndex = FMath::RandRange(0, StoreItemDataAssets.Num() - 1);
-	int CurrentIndex = InitialIndex;
 
-	do
-	{
-		if(!StoreItemDataAssets[CurrentIndex]->bIsShown)
-		{
-			StoreItemDataAssets[CurrentIndex]->bIsShown = true;
-			++SearchItemCount;
-			return StoreItemDataAssets[CurrentIndex];
-		}
-
-		CurrentIndex = (CurrentIndex + 1) % StoreItemDataAssets.Num();
-	}
-	while (CurrentIndex != InitialIndex);
-
-	return nullptr;
-}
 
 
