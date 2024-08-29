@@ -2,6 +2,8 @@
 #include "Enemies/Enemy.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 AEnemy::AEnemy()
@@ -16,28 +18,32 @@ AEnemy::AEnemy()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
-void AEnemy::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void AEnemy::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 void AEnemy::OnGetHit(const FVector& ImpactPoint)
 {
-	DrawDebugSphere(GetWorld(), ImpactPoint, 15.0f, 25, FColor::Orange, false, 3.0f, 0, 0.5f);
+	// DrawDebugSphere(GetWorld(), ImpactPoint, 15.0f, 25, FColor::Orange, false, 3.0f, 0, 0.5f);
+	
 	PlayHitReactMontage(GetReactNameFromImpactPoint(ImpactPoint));
+	PlayEffects(ImpactPoint);
+}
+
+void AEnemy::PlayEffects(const FVector& ImpactPoint) const
+{
+	if(HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+	}
+
+	if(BloodParticle)
+	{
+		const FRotator BloodRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ImpactPoint);
+
+		// Draw debug arrow
+		// const FVector Direction = BloodRotation.Vector();
+		// const FVector EndLocation = GetActorLocation() + Direction * 100.f;
+		// UKismetSystemLibrary::DrawDebugArrow(this, ImpactPoint, EndLocation, 10.f, FColor::Blue, 3.f, 1.f);
+		
+		UGameplayStatics::SpawnEmitterAtLocation(this, BloodParticle, ImpactPoint, BloodRotation);
+	}
 }
 
 FName AEnemy::GetReactNameFromImpactPoint(const FVector& ImpactPoint) const
@@ -73,9 +79,9 @@ FName AEnemy::GetReactNameFromImpactPoint(const FVector& ImpactPoint) const
 		ReactName = FName("FromLeft");
 	}
 	
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 150.f, 1.f, FColor::Red, 3.f, 0.5f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 150.f, 1.f, FColor::Green, 3.f, 0.5f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 150.f, 1.f, FColor::Blue, 3.f, 0.5f);
+	// UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 150.f, 1.f, FColor::Red, 3.f, 0.5f);
+	// UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 150.f, 1.f, FColor::Green, 3.f, 0.5f);
+	// UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 150.f, 1.f, FColor::Blue, 3.f, 0.5f);
 
 	return ReactName;
 }

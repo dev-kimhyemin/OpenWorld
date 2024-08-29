@@ -16,16 +16,22 @@ class OPENWORLD_API AEnemy : public ACharacter, public IHitReceiver
 
 public:
 	AEnemy();
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void OnGetHit(const FVector& ImpactPoint) override;
 
 protected:
-	virtual void BeginPlay() override;
 	FName GetReactNameFromImpactPoint(const FVector& ImpactPoint) const;
 	void PlayHitReactMontage(const FName& SectionName) const;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	void PlayEffects(const FVector& ImpactPoint) const;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Properties")
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Properties")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Properties")
+	UParticleSystem* BloodParticle;
+	
 };
